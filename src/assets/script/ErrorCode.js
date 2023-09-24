@@ -1,0 +1,2 @@
+export const CITY_ALREADY_IN_SYSTEM = 111
+export const NO_DATA_FOR_THAT_CITY = 222
