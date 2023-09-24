@@ -27,27 +27,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col col-6">
-        <h2>Linna nimi</h2>
-        <table class="table">
-          <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Kuupäev</th>
-            <th scope="col">Tempertatuur </th>
-            <th scope="col">Tuulekiirus m/s</th>
-            <th scope="col">Õhuniiskus %</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(cityData, index) in citiesMeasurementData" :key="index">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ cityData.dateTime }}</td>
-            <td>{{ cityData.temperature }}</td>
-            <td>{{ cityData.windSpeed}}</td>
-            <td>{{ cityData.humidity}}</td>
-          </tr>
-          </tbody>
-        </table>
+        <MeasurementsDataTable :cities-measurement-data="cityMeasurementData"/>
       </div>
     </div>
   </div>
@@ -66,10 +46,11 @@ import {
 import {CITY_ALREADY_IN_SYSTEM, NO_DATA_FOR_THAT_CITY} from "@/assets/script/ErrorCode";
 import router from "@/router";
 import CitiesDropdown from "@/components/CitiesDropdown.vue";
+import MeasurementsDataTable from "@/components/MeasurementsDataTable.vue";
 
 export default {
   name: 'HomeView',
-  components: {CitiesDropdown, AlertDanger, AlertSuccess},
+  components: {MeasurementsDataTable, CitiesDropdown, AlertDanger, AlertSuccess},
   data() {
     return {
       cityName: '',
@@ -86,7 +67,7 @@ export default {
           cityName: ''
         }
       ],
-      citiesMeasurementData: [
+      cityMeasurementData: [
         {
           temperature: 0,
           windSpeed: 0,
@@ -156,7 +137,7 @@ export default {
     },
 
     deleteCity() {
-      if (this.cityId > 0) {
+      if (this.selectedCityId > 0) {
         this.sendDeleteCityRequest();
       } else {
         this.errorMessage = NO_CITY_SELECTED
@@ -184,13 +165,22 @@ export default {
     },
 
     getCityMeasurementData() {
+      if (this.selectedCityId > 0) {
+        this.sendCityMeasurementDataRequest();
+      } else {
+        this.errorMessage = NO_CITY_SELECTED
+        this.resetErrorMessage()
+      }
+    },
+
+    sendCityMeasurementDataRequest() {
       this.$http.get("/city", {
             params: {
               cityId: this.selectedCityId
             }
           }
       ).then(response => {
-        this.citiesMeasurementData = response.data
+        this.cityMeasurementData = response.data
       }).catch(error => {
         router.push({name: 'errorRoute'})
       })
