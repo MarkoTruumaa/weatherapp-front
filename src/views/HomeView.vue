@@ -72,7 +72,7 @@ export default {
           temperature: 0,
           windSpeed: 0,
           humidity: 0,
-          dateTime: ''
+          time: ''
         }
       ]
     }
