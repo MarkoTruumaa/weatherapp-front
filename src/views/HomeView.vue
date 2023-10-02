@@ -102,7 +102,7 @@ export default {
       ).then(response => {
         this.successMessage = CITY_ADDED_TO_SYSTEM
         setTimeout(() => {this.resetFields()}, 2000)
-        this.getCityInfo()
+        this.getAllCitiesInfo()
       }).catch(error => {
         this.errorResponse = error.response.data
         this.handleErrorResponse()
@@ -114,8 +114,8 @@ export default {
       this.cityName = ''
     },
 
-    getCityInfo() {
-      this.$http.get("/cities")
+    getAllCitiesInfo() {
+      this.$http.get("/city/all")
           .then(response => {
             this.cities = response.data
           })
@@ -154,7 +154,7 @@ export default {
       ).then(response => {
         this.successMessage = CITY_DELETED_FROM_SYSTEM
         setTimeout(() => {this.successMessage = ''}, 2000)
-        this.getCityInfo()
+        this.getAllCitiesInfo()
       }).catch(error => {
         router.push({name: 'errorRoute'})
       })
@@ -188,7 +188,7 @@ export default {
   },
 
   mounted() {
-    this.getCityInfo()
+    this.getAllCitiesInfo()
   }
 }
 </script>
